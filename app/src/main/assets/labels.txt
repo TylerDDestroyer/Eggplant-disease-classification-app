@@ -1,0 +1,4 @@
+0 Healthy
+1 Epilachna Beetle
+2 Flea Beetle
+3 Mite
