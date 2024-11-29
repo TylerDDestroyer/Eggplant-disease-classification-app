@@ -1,7 +1,8 @@
 [versions]
-agp = "8.3.1"
+agp = "8.7.2"
 appcompatVersion = "1.4.1"
 core = "1.13.1"
+glide = "4.15.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
@@ -16,7 +17,9 @@ tensorflowLiteGpu = "2.3.0"
 
 [libraries]
 appcompat-v141 = { module = "androidx.appcompat:appcompat", version.ref = "appcompatVersion" }
+compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glide" }
 core = { module = "androidx.core:core", version.ref = "core" }
+glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

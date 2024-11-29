@@ -13,11 +13,11 @@ public class HowToUsePage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.how_to_use_activity);
 
-        // Set up the toolbar
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Enable the Up button
+
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);

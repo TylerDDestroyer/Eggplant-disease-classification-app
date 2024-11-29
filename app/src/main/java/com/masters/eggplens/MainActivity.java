@@ -2,7 +2,6 @@ package com.masters.eggplens;
 
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -14,9 +13,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -41,6 +41,10 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int PICK_IMAGE = 2;
     private ImageView imageView;
+    private ImageView loadingGif;
+
+    RelativeLayout progressLayout;
+
 
     int imageSize = 224;
 
@@ -76,15 +80,30 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        imageView = findViewById(R.id.imageView);
+        loadingGif = findViewById(R.id.loadingGif);
+
 
         imageView = findViewById(R.id.imageView);
         Button btnTakePhoto = findViewById(R.id.btnTakePhoto);
         Button btnUploadFile = findViewById(R.id.btnUploadFile);
 
+
         btnTakePhoto.setOnClickListener(view -> openCamera());
         btnUploadFile.setOnClickListener(view -> openGallery());
+
+        
+    }
+    private void showLoadingAnimation() {
+        loadingGif.setVisibility(View.VISIBLE); // Show the GIF
+    }
+
+    private void hideLoadingAnimation() {
+        loadingGif.setVisibility(View.GONE); // Hide the GIF
     }
 
     private void openCamera() {
@@ -133,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void classifyImage(Bitmap image) {
         try {
+            showLoadingAnimation();
             // Check if image dimensions match the expected size
             int imageWidth = image.getWidth();
             int imageHeight = image.getHeight();
@@ -161,17 +181,18 @@ public class MainActivity extends AppCompatActivity {
             }
             inputFeature0.loadBuffer(byteBuffer);
 
-// Now you can run the model with the inputFeature0 tensor
 
 
-            // Runs model inference and gets result.
             Model.Outputs outputs = model.process(inputFeature0);
             String resultText = getString(outputs);
+
+            hideLoadingAnimation();
 
             // Convert the image to a byte array
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             image.compress(Bitmap.CompressFormat.PNG, 100, stream);
             byte[] byteArray = stream.toByteArray();
+
 
             // Pass the result and the image to ResultActivity
             Intent intent = new Intent(MainActivity.this, ResultActivityActivity.class);
@@ -183,7 +204,8 @@ public class MainActivity extends AppCompatActivity {
             model.close();
         } catch (IOException e) {
             e.printStackTrace();
-            // Handle the exception appropriately
+            Toast.makeText(this, "Error processing image. Please try again.", Toast.LENGTH_SHORT).show();
+
         }
     }
 
@@ -192,6 +214,7 @@ public class MainActivity extends AppCompatActivity {
         TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
 
         float[] confidences = outputFeature0.getFloatArray();
+        float threshold = 0.6f;
         // Find the index of the class with the biggest confidence.
         int maxPos = 0;
         float maxConfidence = 0;
@@ -204,12 +227,13 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         String resultText;
-        if (maxPos < classes.length) {
+        if (maxConfidence >= threshold) {
             resultText = classes[maxPos];
         } else {
-            resultText = "Unknown"; // Handle the case where maxPos is out of bounds
+            resultText = "Not an eggplant or related disease image. Please try again.";
         }
         return resultText;
+
     }
 
     @Override
@@ -220,8 +244,9 @@ public class MainActivity extends AppCompatActivity {
                 openCamera();
             } else {
                 Toast.makeText(this, "Camera permission is required to use camera", Toast.LENGTH_SHORT).show();
+                hideLoadingAnimation();
+
             }
         }
     }
 }
-

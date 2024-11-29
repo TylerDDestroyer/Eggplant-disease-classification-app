@@ -25,8 +25,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:fontFamily="@font/roboto_bold"
         android:textSize="24sp"
         android:textColor="@color/black"
         android:text="Result will be shown here" />
+
+    <TextView
+        android:id="@+id/solutionTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_regular"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:layout_marginTop="16dp"
+        android:padding="12dp"
+        android:text="Solution will be displayed here."
+        android:layout_below="@id/resultTextView" />
+
 
 </LinearLayout>
