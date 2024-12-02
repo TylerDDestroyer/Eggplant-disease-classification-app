@@ -25,18 +25,15 @@ The **Eggplant Disease Detection App** is a mobile application designed to assis
 ### Steps
 1. Clone this repository:
    ```bash
-   git clone https://github.com/yourusername/eggplant-disease-detection.git
+   git clone https://github.com/yourusername/Eggplant-disease-classification-app.git
    ```
-2. **Model Training** (Optional):
-   - Navigate to the `model` directory and run the training script to train the TensorFlow model.
-   - Ensure the training dataset is properly set up in the specified directory.
 
-3. **Set Up the Android App**:
+2. **Set Up the Android App**:
    - Open the `android-app` folder in Android Studio.
    - Sync the project with Gradle files.
    - Replace the placeholder TensorFlow Lite model (`.tflite` file) with your trained model in the `assets` folder.
 
-4. **Build and Run**:
+3. **Build and Run**:
    - Connect an Android device or use an emulator.
    - Build and deploy the app from Android Studio.
 
