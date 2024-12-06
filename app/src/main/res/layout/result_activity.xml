@@ -2,7 +2,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@drawable/page2">
 
     <!-- Toolbar stays at the top -->
     <androidx.appcompat.widget.Toolbar
@@ -39,7 +39,7 @@
                 android:layout_gravity="center"
                 android:fontFamily="@font/roboto_bold"
                 android:layout_marginTop="16dp"
-                android:textSize="26sp"
+                android:textSize="28sp"
                 android:textColor="@color/black"
                 android:text="Result will be shown here" />
 
@@ -48,10 +48,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_bold"
-                android:textSize="24sp"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:textSize="26sp"
                 android:textColor="@color/black"
                 android:padding="12dp"
-                android:text="Solution" />
+                android:text="Treatment" />
 
             <TextView
                 android:id="@+id/solutionTextView"
@@ -60,9 +62,9 @@
                 android:fontFamily="@font/roboto_regular"
                 android:textSize="20sp"
                 android:textColor="@color/black"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginBottom="16dp"
-                android:padding="12dp"
+                android:padding="16dp"
                 android:text="Solution will be displayed here." />
 
         </LinearLayout>
