@@ -1,6 +1,4 @@
 package com.masters.eggplens;
-
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -8,6 +6,7 @@ import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
@@ -25,12 +24,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
 import com.masters.eggplens.ml.Model;
-
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -69,6 +65,11 @@ public class MainActivity extends AppCompatActivity {
         if (item_id == R.id.menuHow){
             Intent intent = new Intent(this, HowToUsePage.class);
             startActivity(intent);
+            return true;
+        }
+
+        if (item_id == R.id.menuExit) {
+            finish(); // Close the app
             return true;
         }
 
@@ -186,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
             Model.Outputs outputs = model.process(inputFeature0);
             String resultText = getString(outputs);
 
-            hideLoadingAnimation();
+            new Handler().postDelayed(() -> hideLoadingAnimation(), 2000);
 
             // Convert the image to a byte array
             ByteArrayOutputStream stream = new ByteArrayOutputStream();

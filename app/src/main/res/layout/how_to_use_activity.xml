@@ -1,39 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/white"
-    >
+    android:background="@color/white">
+
+    <!-- Fixed Toolbar -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/holo_purple"
-        />
+        android:layout_alignParentTop="true" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="How To Use"
-        android:textSize="24sp"
-        android:textColor="@color/black"
-        android:fontFamily="@font/roboto_bold"
-        android:textStyle="bold"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="16dp"/>
-
-    <TextView
+    <!-- Scrollable Content -->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginHorizontal="16dp"
-        android:padding="16dp"
-        android:text="To use the app effectively, start by ensuring your camera lens is clean by gently wiping it with a lint-free cloth. Check that you are in a well-lit area, preferably with natural daylight or sufficient artificial lighting to avoid shadows. Open the app and navigate to the camera feature. Position the eggplant leaf so the entire leaf is visible in the frame, tapping the screen to focus the camera for a clear image. Capture the photo by holding the device steady and pressing the capture button. Review the image for clarity and brightness; if it's blurry or poorly lit, retake the photo. Once satisfied, proceed with the app's detection process to analyze the image. The app will provide the health status of the leaf along with treatment recommendations if any disease is detected. For best results, avoid shadows, ensure a stable shot, and use a plain background."
-        android:textColor="@color/black"
-        android:fontFamily="@font/roboto_regular"
-        android:textSize="16sp"
-        android:lineSpacingExtra="4dp" />
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-</LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="How To Use"
+                android:textSize="24sp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/roboto_bold"
+                android:textStyle="bold"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="16dp" />
+
+            <ImageView
+                android:id="@+id/how_to_use_image"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:src="@drawable/icon1"
+                android:contentDescription="Illustration showing how to use the app"
+                android:scaleType="fitCenter"
+                android:layout_margin="16dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginHorizontal="16dp"
+                android:padding="16dp"
+                android:text="To use the app effectively, start by ensuring your camera lens is clean by gently wiping it with a lint-free cloth."
+                android:textColor="@color/black"
+                android:fontFamily="@font/roboto_regular"
+                android:textSize="16sp"
+                android:lineSpacingExtra="4dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginHorizontal="16dp"
+                android:padding="16dp"
+                android:text="Open the app and navigate to the camera feature. Position the eggplant leaf so the entire leaf is visible in the frame, tapping the screen to focus the camera for a clear image."
+                android:textColor="@color/black"
+                android:fontFamily="@font/roboto_regular"
+                android:textSize="16sp"
+                android:lineSpacingExtra="4dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginHorizontal="16dp"
+                android:padding="16dp"
+                android:text="Capture the photo by holding the device steady and pressing the capture button. Review the image for clarity and brightness; if it's blurry or poorly lit, retake the photo."
+                android:textColor="@color/black"
+                android:fontFamily="@font/roboto_regular"
+                android:textSize="16sp"
+                android:lineSpacingExtra="4dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginHorizontal="16dp"
+                android:padding="16dp"
+                android:text="Once satisfied, proceed with the app's detection process to analyze the image. The app will provide the health status of the leaf along with treatment recommendations if any disease is detected."
+                android:textColor="@color/black"
+                android:fontFamily="@font/roboto_regular"
+                android:textSize="16sp"
+                android:lineSpacingExtra="4dp" />
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

@@ -25,22 +25,21 @@
         android:theme="@style/Theme.EggpLens"
         tools:targetApi="31">
         <activity
+            android:name=".DetectActivity"
+            android:exported="false" />
+        <activity
             android:name=".ResultActivityActivity"
             android:exported="false" />
-
         <activity
             android:name=".AboutPage"
             android:exported="false" />
-
         <activity
             android:name=".HowToUsePage"
-            android:exported="false"/>
-
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:screenOrientation="portrait"
-            >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

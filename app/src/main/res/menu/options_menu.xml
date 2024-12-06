@@ -8,4 +8,8 @@
         android:title="How to use"
         android:id="@+id/menuHow"/>
 
+    <item
+        android:id="@+id/menuExit"
+        android:title="Exit" />
+
 </menu>

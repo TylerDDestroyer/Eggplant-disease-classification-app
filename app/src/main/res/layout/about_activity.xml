@@ -23,6 +23,15 @@
         android:textSize="28sp"
         android:textStyle="bold" />
 
+    <ImageView
+        android:id="@+id/how_to_use_image"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:src="@mipmap/eggplant_foreground"
+        android:contentDescription="Illustration showing how to use the app"
+        android:scaleType="fitCenter"
+        android:layout_margin="16dp" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
