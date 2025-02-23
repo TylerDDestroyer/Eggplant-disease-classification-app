@@ -1,6 +1,4 @@
 package com.masters.eggplens;
-
-
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -32,4 +30,3 @@ public class HowToUsePage extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 }
-

@@ -1,4 +1,5 @@
 package com.masters.eggplens;
+
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,10 +24,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import com.masters.eggplens.ml.Model;
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 import java.io.ByteArrayOutputStream;
+import com.masters.eggplens.ml.Mnv2v4;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -37,12 +37,10 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int PICK_IMAGE = 2;
     private ImageView imageView;
-    private ImageView loadingGif;
 
-    RelativeLayout progressLayout;
-
-
+    private int defaultImageRes;
     int imageSize = 224;
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -72,8 +70,18 @@ public class MainActivity extends AppCompatActivity {
             finish(); // Close the app
             return true;
         }
-
+        if (item.getItemId() == android.R.id.home) {
+            refreshActivity();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
+    }
+    // Refresh activity
+    private void refreshActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
 
     @Override
@@ -82,11 +90,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        imageView = findViewById(R.id.imageView);
-        loadingGif = findViewById(R.id.loadingGif);
 
 
         imageView = findViewById(R.id.imageView);
@@ -97,16 +103,12 @@ public class MainActivity extends AppCompatActivity {
         btnTakePhoto.setOnClickListener(view -> openCamera());
         btnUploadFile.setOnClickListener(view -> openGallery());
 
-        
-    }
-    private void showLoadingAnimation() {
-        loadingGif.setVisibility(View.VISIBLE); // Show the GIF
-    }
+        defaultImageRes = R.mipmap.eggplant_foreground;
 
-    private void hideLoadingAnimation() {
-        loadingGif.setVisibility(View.GONE); // Hide the GIF
     }
-
+    private void resetImageView() {
+        imageView.setImageResource(defaultImageRes);
+    }
     private void openCamera() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_IMAGE_CAPTURE);
@@ -153,7 +155,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void classifyImage(Bitmap image) {
         try {
-            showLoadingAnimation();
             // Check if image dimensions match the expected size
             int imageWidth = image.getWidth();
             int imageHeight = image.getHeight();
@@ -161,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("Debug", "Image dimensions do not match the expected size: " + imageSize);
                 return;
             }
-            Model model = Model.newInstance(getApplicationContext());
+            Mnv2v4 model = Mnv2v4.newInstance(getApplicationContext());
 
             // Creates inputs for reference.
             TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, 224, 224, 3}, DataType.FLOAT32);
@@ -172,22 +173,20 @@ public class MainActivity extends AppCompatActivity {
             image.getPixels(intValues, 0, image.getWidth(), 0, 0, image.getWidth(), image.getHeight());
             int pixel = 0;
             //iterate over each pixel and extract R, G, and B values. Add those values individually to the byte buffer.
-            for(int i = 0; i < imageSize; i ++){
-                for(int j = 0; j < imageSize; j++){
-                    int val = intValues[pixel++]; // RGB
-                    byteBuffer.putFloat(((val >> 16) & 0xFF) * (1.f / 1));
-                    byteBuffer.putFloat(((val >> 8) & 0xFF) * (1.f / 1));
-                    byteBuffer.putFloat((val & 0xFF) * (1.f / 1));
+            for (int i = 0; i < imageSize; i++) {
+                for (int j = 0; j < imageSize; j++) {
+                    int val = intValues[pixel++]; // Get pixel
+
+                    // Extract RGB values and normalize
+                    byteBuffer.putFloat(((val >> 16) & 0xFF) / 255.0f); // Red
+                    byteBuffer.putFloat(((val >> 8) & 0xFF) / 255.0f);  // Green
+                    byteBuffer.putFloat((val & 0xFF) / 255.0f);         // Blue
                 }
             }
             inputFeature0.loadBuffer(byteBuffer);
 
-
-
-            Model.Outputs outputs = model.process(inputFeature0);
+            Mnv2v4.Outputs outputs = model.process(inputFeature0);
             String resultText = getString(outputs);
-
-            new Handler().postDelayed(() -> hideLoadingAnimation(), 2000);
 
             // Convert the image to a byte array
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -201,7 +200,8 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("image", byteArray);
             startActivity(intent);
 
-            // Releases model resources if no longer used.
+            resetImageView();
+
             model.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -211,16 +211,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @NonNull
-    private static String getString(Model.Outputs outputs) {
+    private static String getString(Mnv2v4.Outputs outputs) {
         TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
 
         float[] confidences = outputFeature0.getFloatArray();
-        float threshold = 0.6f;
+        float threshold = 0.7f;
         // Find the index of the class with the biggest confidence.
         int maxPos = 0;
         float maxConfidence = 0;
-        String[] classes = {"Healthy Leaf", "Insect Pest Disease", "Leaf Spot Disease", "Mosaic Virus Disease",
-                "Small Leaf Disease", "White Mold Disease", "Wilt Disease"};
+        String[] classes = {"Aphids", "Cercospora Leaf Spot", "Defect Eggplant", "Flea Beetles", "Fresh Eggplant", "Fresh Eggplant Leaf", "Leaf Wilt", "Phytophthora Blight", "Powdery Mildew", "Tobacco Mosaic Virus"};
         for (int i = 0; i < confidences.length; i++) {
             if (confidences[i] > maxConfidence) {
                 maxConfidence = confidences[i];
@@ -231,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
         if (maxConfidence >= threshold) {
             resultText = classes[maxPos];
         } else {
-            resultText = "Not an eggplant or related disease image. Please try again.";
+            resultText = "Not an eggplant or related disease image. Please take a clearer picture and try again.";
         }
         return resultText;
 
@@ -245,7 +244,6 @@ public class MainActivity extends AppCompatActivity {
                 openCamera();
             } else {
                 Toast.makeText(this, "Camera permission is required to use camera", Toast.LENGTH_SHORT).show();
-                hideLoadingAnimation();
 
             }
         }

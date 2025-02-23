@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_centerInParent="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/page"
     tools:context=".MainActivity">
 
@@ -11,74 +11,71 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/holo_purple"/>
+        android:background="@android:color/holo_purple"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="140dp"
-        android:src="@mipmap/eggplant_foreground" />
+        android:layout_width="280dp"
+        android:layout_height="280dp"
+        android:layout_marginTop="50dp"
+        android:src="@mipmap/eggplant_foreground"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/text_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/imageView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="35dp"
         android:text="Submit Image for Analysis"
-        android:textSize="18sp"
+        android:textSize="24sp"
         android:textColor="@color/black"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/imageView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_below="@id/text_1"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:layout_width="wrap_content"
-        android:textSize="15dp"
-        android:layout_height="42dp"
-        android:text="Snap a photo or share an existing image" />
-
-
-    <Button
-        android:id="@+id/btnUploadFile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/imageView"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="380dp"
-        android:layout_marginEnd="25dp"
-        android:layout_toStartOf="@id/btnTakePhoto"
-        android:background="@drawable/border"
-        android:backgroundTint="@android:color/transparent"
-        android:drawableLeft="@drawable/upload"
-        android:text="Upload File"
-        android:textColor="@android:color/black" />
+        android:layout_marginTop="10dp"
+        android:textSize="16sp"
+        android:text="Snap a photo or share an existing image"
+        app:layout_constraintTop_toBottomOf="@id/text_1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/btnTakePhoto"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/imageView"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="380dp"
-        android:layout_marginEnd="44dp"
         android:backgroundTint="@android:color/holo_purple"
         android:drawableLeft="@drawable/camera"
         android:text="Take Photo"
-        android:textColor="@android:color/white" />
+        android:textSize="20sp"
+        android:textColor="@android:color/white"
+        android:padding="12dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@id/btnUploadFile"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <ImageView
-        android:id="@+id/loadingGif"
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/btnUploadFile"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="gone"
-        android:src="@drawable/scanning" />
+        android:background="@drawable/border"
+        android:backgroundTint="@android:color/transparent"
+        android:drawableLeft="@drawable/upload"
+        android:padding="11dp"
+        android:text="Upload File"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="65dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

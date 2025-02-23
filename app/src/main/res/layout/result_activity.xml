@@ -39,6 +39,7 @@
                 android:layout_gravity="center"
                 android:fontFamily="@font/roboto_bold"
                 android:layout_marginTop="16dp"
+                android:padding="12dp"
                 android:textSize="28sp"
                 android:textColor="@color/black"
                 android:text="Result will be shown here" />
@@ -65,8 +66,12 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="16dp"
                 android:padding="16dp"
+                android:background="@drawable/solution_text_bg"
+                android:elevation="4dp"
+                android:lineSpacingExtra="4dp"
+                android:gravity="start|center_vertical"
+                android:textAlignment="viewStart"
                 android:text="Solution will be displayed here." />
-
         </LinearLayout>
     </ScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

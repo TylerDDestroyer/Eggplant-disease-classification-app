@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,35 +12,47 @@
         android:layout_height="wrap_content"
         android:background="@android:color/holo_purple" />
 
-    <!-- Title TextView -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="About"
-        android:fontFamily="@font/roboto_bold"
-        android:textColor="@color/black"
-        android:textSize="28sp"
-        android:textStyle="bold" />
-
-    <ImageView
-        android:id="@+id/how_to_use_image"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:src="@mipmap/eggplant_foreground"
-        android:contentDescription="Illustration showing how to use the app"
-        android:scaleType="fitCenter"
-        android:layout_margin="16dp" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:fillViewport="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:padding="16dp"
+                android:text="About"
+                android:fontFamily="@font/roboto_black"
+                android:textColor="@color/black"
+                android:textSize="28sp"
+                android:textStyle="bold" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:padding="16dp"
-        android:text="Welcome to the Eggplant Disease Detection App, a revolutionary tool designed to empower farmers with the ability to accurately identify diseases in their eggplants. Our mission is to provide farmers with immediate, actionable insights to protect their crops and ensure healthy yields."
-        android:textColor="@color/black"
-        android:fontFamily="@font/roboto_regular"
-        android:textSize="16sp"
-        android:lineSpacingExtra="4dp" />
+            <ImageView
+                android:id="@+id/how_to_use_image"
+                android:layout_width="match_parent"
+                android:layout_height="270dp"
+                android:src="@mipmap/eggplant_foreground"
+                android:contentDescription="Illustration showing how to use the app"
+                android:scaleType="fitCenter"
+                android:layout_margin="16dp" />
 
-</LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:padding="16dp"
+                android:text="Welcome to the Eggplant Disease Detection App, a revolutionary tool designed to empower farmers with the ability to accurately identify diseases in their eggplants. Our mission is to provide farmers with immediate, actionable insights to protect their crops and ensure healthy yields."
+                android:textColor="@color/black"
+                android:fontFamily="@font/roboto_bold"
+                android:textSize="20sp"
+                android:lineSpacingExtra="4dp" />
+
+        </LinearLayout>
+    </ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
