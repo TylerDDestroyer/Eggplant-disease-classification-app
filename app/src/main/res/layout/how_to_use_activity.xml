@@ -45,7 +45,8 @@
                 android:textColor="@color/black"
                 android:fontFamily="@font/roboto_bold"
                 android:textSize="20sp"
-                android:lineSpacingExtra="4dp" />
+                android:lineSpacingExtra="4dp"
+                android:justificationMode="inter_word"/>
 
             <ImageView
                 android:id="@+id/how_to_use_image"
@@ -66,7 +67,8 @@
                 android:textColor="@color/black"
                 android:fontFamily="@font/roboto_bold"
                 android:textSize="20sp"
-                android:lineSpacingExtra="4dp" />
+                android:lineSpacingExtra="4dp"
+                android:justificationMode="inter_word"/>
 
             <ImageView
                 android:id="@+id/how_to_use"
@@ -88,7 +90,8 @@
                 android:textColor="@color/black"
                 android:fontFamily="@font/roboto_bold"
                 android:textSize="20sp"
-                android:lineSpacingExtra="4dp" />
+                android:lineSpacingExtra="4dp"
+                android:justificationMode="inter_word"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -100,7 +103,8 @@
                 android:textColor="@color/black"
                 android:fontFamily="@font/roboto_bold"
                 android:textSize="20sp"
-                android:lineSpacingExtra="4dp" />
+                android:lineSpacingExtra="4dp"
+                android:justificationMode="inter_word"/>
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

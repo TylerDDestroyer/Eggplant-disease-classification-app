@@ -28,6 +28,7 @@ import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 import java.io.ByteArrayOutputStream;
 import com.masters.eggplens.ml.Mnv2v4;
+import com.masters.eggplens.ml.EggplantClassifier;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -162,47 +163,40 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("Debug", "Image dimensions do not match the expected size: " + imageSize);
                 return;
             }
-            Mnv2v4 model = Mnv2v4.newInstance(getApplicationContext());
+            EggplantClassifier eggplantModel = EggplantClassifier.newInstance(getApplicationContext());
+            TensorBuffer eggplantInput = TensorBuffer.createFixedSize(new int[]{1, 224, 224, 3}, DataType.FLOAT32);
+            ByteBuffer eggplantBuffer = convertBitmapToByteBuffer(image);
+            eggplantInput.loadBuffer(eggplantBuffer);
 
-            // Creates inputs for reference.
-            TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, 224, 224, 3}, DataType.FLOAT32);
-            ByteBuffer byteBuffer = ByteBuffer.allocateDirect(4 * imageSize * imageSize * 3);
-            byteBuffer.order(ByteOrder.nativeOrder());
+            EggplantClassifier.Outputs eggplantOutputs = eggplantModel.process(eggplantInput);
+            float[] eggplantConfidences = eggplantOutputs.getOutputFeature0AsTensorBuffer().getFloatArray();
+            float eggplantConfidenceThreshold = 0.7f;  // Confidence threshold
 
-            int[] intValues = new int[imageSize * imageSize];
-            image.getPixels(intValues, 0, image.getWidth(), 0, 0, image.getWidth(), image.getHeight());
-            int pixel = 0;
-            //iterate over each pixel and extract R, G, and B values. Add those values individually to the byte buffer.
-            for (int i = 0; i < imageSize; i++) {
-                for (int j = 0; j < imageSize; j++) {
-                    int val = intValues[pixel++]; // Get pixel
-
-                    // Extract RGB values and normalize
-                    byteBuffer.putFloat(((val >> 16) & 0xFF) / 255.0f); // Red
-                    byteBuffer.putFloat(((val >> 8) & 0xFF) / 255.0f);  // Green
-                    byteBuffer.putFloat((val & 0xFF) / 255.0f);         // Blue
-                }
+            // Check if the model detects an eggplant
+            if (eggplantConfidences[0] >= eggplantConfidenceThreshold) {
+                Toast.makeText(this, "Not an eggplant or related disease. Please try again.", Toast.LENGTH_LONG).show();
+                resetImageView();
+                return; // Stop here if it's not an eggplant
             }
-            inputFeature0.loadBuffer(byteBuffer);
+            eggplantModel.close();
 
-            Mnv2v4.Outputs outputs = model.process(inputFeature0);
-            String resultText = getString(outputs);
+            // === 2nd Stage: Disease Classification ===
+            Mnv2v4 diseaseModel = Mnv2v4.newInstance(getApplicationContext());
+            TensorBuffer diseaseInput = TensorBuffer.createFixedSize(new int[]{1, 224, 224, 3}, DataType.FLOAT32);
+            diseaseInput.loadBuffer(eggplantBuffer);
 
-            // Convert the image to a byte array
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            image.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            byte[] byteArray = stream.toByteArray();
+            Mnv2v4.Outputs diseaseOutputs = diseaseModel.process(diseaseInput);
+            String resultText = getString(diseaseOutputs);
+            diseaseModel.close();
 
-
-            // Pass the result and the image to ResultActivity
+            // Show result
             Intent intent = new Intent(MainActivity.this, ResultActivityActivity.class);
             intent.putExtra("result", resultText);
-            intent.putExtra("image", byteArray);
+            intent.putExtra("image", convertBitmapToByteArray(image));
             startActivity(intent);
 
             resetImageView();
 
-            model.close();
         } catch (IOException e) {
             e.printStackTrace();
             Toast.makeText(this, "Error processing image. Please try again.", Toast.LENGTH_SHORT).show();
@@ -210,12 +204,36 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private ByteBuffer convertBitmapToByteBuffer(Bitmap image) {
+        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(4 * imageSize * imageSize * 3);
+        byteBuffer.order(ByteOrder.nativeOrder());
+
+        int[] intValues = new int[imageSize * imageSize];
+        image.getPixels(intValues, 0, image.getWidth(), 0, 0, image.getWidth(), image.getHeight());
+
+        int pixel = 0;
+        for (int i = 0; i < imageSize; i++) {
+            for (int j = 0; j < imageSize; j++) {
+                int val = intValues[pixel++];
+                byteBuffer.putFloat(((val >> 16) & 0xFF) / 255.0f); // Red
+                byteBuffer.putFloat(((val >> 8) & 0xFF) / 255.0f);  // Green
+                byteBuffer.putFloat((val & 0xFF) / 255.0f);
+            }
+        }
+        return byteBuffer;
+    }
+
+    private byte[] convertBitmapToByteArray(Bitmap image) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        return stream.toByteArray();
+    }
     @NonNull
     private static String getString(Mnv2v4.Outputs outputs) {
         TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
 
         float[] confidences = outputFeature0.getFloatArray();
-        float threshold = 0.7f;
+        float threshold = 0.6f;
         // Find the index of the class with the biggest confidence.
         int maxPos = 0;
         float maxConfidence = 0;
@@ -230,12 +248,11 @@ public class MainActivity extends AppCompatActivity {
         if (maxConfidence >= threshold) {
             resultText = classes[maxPos];
         } else {
-            resultText = "Not an eggplant or related disease image. Please take a clearer picture and try again.";
+            resultText = "Cannot accurately detect. Please take a clearer picture and try again.";
         }
         return resultText;
 
     }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);

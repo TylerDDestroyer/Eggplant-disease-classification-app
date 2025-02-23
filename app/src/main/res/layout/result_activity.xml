@@ -1,35 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/page2">
 
-    <!-- Toolbar stays at the top -->
+    <!-- Toolbar in the Upper Layer -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/holo_purple"
-        android:layout_gravity="top" />
+        android:elevation="6dp" />
 
-    <!-- Scrollable content -->
+    <!-- Scrollable Content in the Lower Layer -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize"
-        android:fillViewport="true">
+        android:clipToPadding="false">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingTop="16dp">
 
             <ImageView
                 android:id="@+id/resultImageView"
-                android:layout_gravity="center"
                 android:layout_width="300dp"
                 android:layout_height="300dp"
                 android:scaleType="centerCrop"
+                android:layout_gravity="center"
                 android:layout_marginTop="16dp" />
 
             <TextView
@@ -37,30 +38,29 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:fontFamily="@font/roboto_bold"
                 android:layout_marginTop="16dp"
                 android:padding="12dp"
                 android:textSize="28sp"
                 android:textColor="@color/black"
+                android:fontFamily="@font/roboto_bold"
                 android:text="Result will be shown here" />
 
             <TextView
                 android:id="@+id/solutionText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_bold"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:textSize="26sp"
                 android:textColor="@color/black"
                 android:padding="12dp"
+                android:fontFamily="@font/roboto_bold"
                 android:text="Treatment" />
 
             <TextView
                 android:id="@+id/solutionTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_regular"
                 android:textSize="20sp"
                 android:textColor="@color/black"
                 android:layout_marginTop="5dp"
@@ -71,7 +71,9 @@
                 android:lineSpacingExtra="4dp"
                 android:gravity="start|center_vertical"
                 android:textAlignment="viewStart"
+                android:fontFamily="@font/roboto_regular"
                 android:text="Solution will be displayed here." />
         </LinearLayout>
     </ScrollView>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</FrameLayout>
